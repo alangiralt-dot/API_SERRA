@@ -42,6 +42,10 @@ return [
             'driver' => 'session',
             'provider' => 'users',
         ],
+        'api' => [ // Afegim el nou guardià de l'API
+            'driver' => 'passport',
+            'provider' => 'users',
+        ],
     ],
 
     /*

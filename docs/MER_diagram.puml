@@ -1,0 +1,160 @@
+@startuml
+hide circle
+entity "users" {
+  * id : bigint unsigned
+  --
+  name : varchar null
+  email : varchar unique
+  email_verified_at : timestamp null
+  password : varchar
+  is_admin : boolean
+  remember_token : varchar null
+  created_at : timestamp null
+  updated_at : timestamp null
+  + customer_id : int unique
+  ..
+  0
+}
+entity "provinces" {
+  * id : int
+  --
+  province : varchar unique
+  ..
+  1
+}
+entity "cities" {
+  * id : int
+  --
+  city : varchar
+  + province_id : int
+  unique(city, province_id)
+  ..
+  2
+}
+entity "customers" {
+  * id : int
+  --
+  first_name : varchar
+  last_name : varchar
+  phone : varchar
+  street : varchar
+  address_number : varchar
+  address_floor : varchar null
+  door : varchar null
+  + city_id : int
+  postal_code : varchar
+  ..
+  3
+}
+entity "statuses" {
+  * id : int
+  --
+  status : varchar unique
+  ..
+  4
+}
+entity "orders" {
+  * id : int
+  --
+  + customer_id : int
+  code : varchar unique
+  + status_id : int
+  date : datetime
+  order_availability : varchar
+  total_amount : decimal
+  ..
+  5
+}
+entity "categories" {
+  * id : int
+  --
+  category : varchar
+  + father_id : int null
+  unique(category, father_id)
+  ..
+  6
+}
+entity "father_products" {
+  * id : int
+  --
+  name : varchar unique
+  description : text null
+  details : text null
+  image_path : varchar
+  + category_id : int
+  ..
+  7
+}
+entity "availabilities"  {
+  * id : int
+  --
+  availability : varchar unique
+  delay_weight : int default 0
+  ..
+  8
+}
+entity "attributes"  {
+  * id : int
+  --
+  attribute : varchar unique
+  ..
+  9
+}
+entity "attribute_father_product"  {
+  + attribute_id : int
+  + father_product_id : int
+  --
+  value : varchar null
+  ..
+  10
+}
+entity "units" {
+  * id : int
+  --
+  unit : varchar unique
+  ..
+  11
+}
+entity "child_products" {
+  * id : int
+  --
+  reference : varchar unique
+  width : int
+  height : int
+  length : int
+  cost_unit_price : decimal
+  current_unit_price : decimal
+  pack : int
+  stock : int
+  + father_product_id : int
+  + availability_id : int
+  + unit_id : int
+  ..
+  12
+}
+entity "child_product_order" {
+  + order_id : int
+  + child_product_id : int
+  --
+  discount : int default 0
+  quantity : int
+  sale_unit_price : decimal
+  subtotal : decimal
+  ..
+  13
+}
+provinces ||--{ cities
+cities ||--{ customers
+customers ||--{orders
+orders ||--{ child_product_order
+child_products ||--{ child_product_order
+categories ||--{ father_products
+father_products ||--{ child_products
+father_products ||--{ attribute_father_product
+availabilities ||--{ child_products
+attributes ||--{ attribute_father_product
+categories ||--{ categories
+statuses ||--{ orders
+customers ||--|| users
+units ||--{ child_products
+@enduml
