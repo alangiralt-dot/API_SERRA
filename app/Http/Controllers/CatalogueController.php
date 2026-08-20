@@ -4,8 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\ChildProduct;
+use App\Http\Requests\GetCategoryProductsRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class CatalogueController extends Controller
 {
@@ -14,7 +14,7 @@ class CatalogueController extends Controller
         $categories = Category::all();
         return response()->json($categories, 200);
     }
-    public function showChildProducts(int $id)
+    public function showChildProducts(GetCategoryProductsRequest $request, int $id)
     {
         $category = Category::findOrFail($id);
 
