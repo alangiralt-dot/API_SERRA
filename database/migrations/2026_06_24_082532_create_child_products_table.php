@@ -26,12 +26,14 @@ return new class extends Migration
             $table->foreignId('availability_id')->constrained('availabilities'); 
             $table->foreignId('unit_id')->constrained('units'); 
         });
-        DB::statement('ALTER TABLE child_products ADD CONSTRAINT child_products_width_positive CHECK (width > 0)');
-        DB::statement('ALTER TABLE child_products ADD CONSTRAINT child_products_height_positive_or_cilindric CHECK (height > 0 OR height = -1)');
-        DB::statement('ALTER TABLE child_products ADD CONSTRAINT child_products_length_positive CHECK (length > 0)');
-        DB::statement('ALTER TABLE child_products ADD CONSTRAINT child_products_current_unit_price_positive CHECK (current_unit_price > 0)');
-        DB::statement('ALTER TABLE child_products ADD CONSTRAINT child_products_pack_positive CHECK (pack > 0)');
-   
+
+        if (config('database.default') !== 'sqlite') {
+            DB::statement('ALTER TABLE child_products ADD CONSTRAINT child_products_width_positive CHECK (width > 0)');
+            DB::statement('ALTER TABLE child_products ADD CONSTRAINT child_products_height_positive_or_cilindric CHECK (height > 0 OR height = -1)');
+            DB::statement('ALTER TABLE child_products ADD CONSTRAINT child_products_length_positive CHECK (length > 0)');
+            DB::statement('ALTER TABLE child_products ADD CONSTRAINT child_products_current_unit_price_positive CHECK (current_unit_price > 0)');
+            DB::statement('ALTER TABLE child_products ADD CONSTRAINT child_products_pack_positive CHECK (pack > 0)');
+        }
     }
 
     /**
