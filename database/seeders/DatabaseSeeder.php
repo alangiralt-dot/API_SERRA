@@ -8,6 +8,7 @@ use App\Models\Customer;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Artisan;
 
 class DatabaseSeeder extends Seeder
 {
@@ -45,6 +46,13 @@ class DatabaseSeeder extends Seeder
             'is_admin'   => false,
             'created_at'  => now(),
             'updated_at'  => now(),
+        ]);
+        
+        Artisan::call('passport:keys', ['--force' => true]);
+        Artisan::call('passport:client', [
+            '--personal' => true,
+            '--name' => 'API_SERRA_Personal_Client',
+            '--no-interaction' => true
         ]);
     }
 }
