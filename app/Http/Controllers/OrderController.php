@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\ChildProduct;
-use Illuminate\Http\Request;
+use App\Http\Requests\CalculateLineSubtotalRequest;
 use Illuminate\Http\JsonResponse;
 
 class OrderController extends Controller
 {
-    public function calculateLineSubtotal(Request $request): JsonResponse
+    public function calculateLineSubtotal(CalculateLineSubtotalRequest $request): JsonResponse
     {
         $childProductId = $request->input('id');
         $quantity = $request->input('quantity');
