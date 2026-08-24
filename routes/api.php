@@ -11,3 +11,7 @@ Route::get('/categories/{id}/products', [CatalogueController::class, 'showChildP
 Route::get('/orders/line-subtotal', [OrderController::class, 'calculateLineSubtotal']);
 Route::post('/customers/tokens', [AuthController::class, 'login']);
 Route::post('/customers', [ProfileController::class, 'store']);
+
+Route::middleware('auth:api')->group(function () {
+    Route::put('/customers/tokens', [AuthController::class, 'logout']);
+});

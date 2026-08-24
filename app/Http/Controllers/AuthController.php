@@ -15,6 +15,8 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
 
+            $user->tokens()->update(['revoked' => true]);
+            
             $tokenResult = $user->createToken('API_SERRA_Token');
             $token = $tokenResult->token;
             $token->save();
@@ -32,5 +34,15 @@ class AuthController extends Controller
             'status'  => 'error',
             'message' => 'The email or password is incorrect.'
         ], 401);
+    }
+
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Session successfully closed.'
+        ], 200);
     }
 }
