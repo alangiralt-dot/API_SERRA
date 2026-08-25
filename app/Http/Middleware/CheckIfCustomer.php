@@ -6,14 +6,14 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CheckIfAdmin
+class CheckIfCustomer
 {
     public function handle(Request $request, Closure $next): Response
     {
-        if (! $request->user() || ! $request->user()->is_admin) {
+        if ($request->user() && $request->user()->is_admin) {
             return response()->json([
-                'error' => 'Forbidden',
-                'message' => 'You do not have administrator privileges to access this path.'
+                'error'   => 'Forbidden',
+                'message' => 'An administrator cannot place orders in the system.'
             ], 403);
         }
 
