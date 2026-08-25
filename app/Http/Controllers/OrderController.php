@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Http\Requests\CalculateLineSubtotalRequest;
 use App\Http\Requests\ConfirmOrderRequest;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -66,6 +67,13 @@ class OrderController extends Controller
             'total_amount'       => round($runningTotal * 1.21, 2),
             'order_availability' => $finalAvailability
         ]);
+        
+        DB::update("
+            UPDATE child_products cp
+            INNER JOIN child_product_order cpo ON cp.id = cpo.child_product_id
+            SET cp.stock = cp.stock - cpo.quantity
+            WHERE cpo.order_id = ?
+        ", [$order->id]);
 
         return response()->json([
             'order_id' => $order->id

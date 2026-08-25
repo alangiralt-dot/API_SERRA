@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Models\ChildProduct;
 
 class ConfirmOrderRequest extends FormRequest
 {
@@ -20,4 +20,27 @@ class ConfirmOrderRequest extends FormRequest
             'order_lines.*.quantity' => ['required', 'integer', 'min:1']
         ];
     }
+
+    public function withValidator($validator): void
+    {
+        $validator->after(function ($validator) {
+            $orderLines = $this->input('order_lines', []);
+
+            $productIds = collect($orderLines)->pluck('id')->all();
+            $products = ChildProduct::whereIn('id', $productIds)->get()->keyBy('id');
+
+            foreach ($orderLines as $index => $line) {
+                $product = $products[$line['id']];
+
+                if ($line['quantity'] > $product->stock) {
+                    $validator->errors()->add(
+                        "order_lines.{$index}.quantity",
+                        "The stock for product {$line['id']} is $product->stock."
+                    );
+
+                }
+            }
+        });
+    }
+
 }
