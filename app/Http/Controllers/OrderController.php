@@ -69,11 +69,19 @@ class OrderController extends Controller
         ]);
         
         DB::update("
-            UPDATE child_products cp
-            INNER JOIN child_product_order cpo ON cp.id = cpo.child_product_id
-            SET cp.stock = cp.stock - cpo.quantity
-            WHERE cpo.order_id = ?
-        ", [$order->id]);
+            UPDATE child_products 
+            SET stock = stock - (
+                SELECT quantity 
+                FROM child_product_order 
+                WHERE child_product_order.child_product_id = child_products.id 
+                  AND child_product_order.order_id = ?
+            )
+            WHERE id IN (
+                SELECT child_product_id 
+                FROM child_product_order 
+                WHERE order_id = ?
+            )
+        ", [$order->id, $order->id]);
 
         return response()->json([
             'order_id' => $order->id

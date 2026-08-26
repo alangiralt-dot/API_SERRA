@@ -10,6 +10,7 @@ class ChildProduct extends Model
 {
     public $timestamps = false;
     protected $table = 'child_products';
+    protected $guarded = [];
 
     //father_products ||--{ child_products
     public function fatherProduct(): BelongsTo

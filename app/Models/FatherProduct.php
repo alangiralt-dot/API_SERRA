@@ -11,7 +11,8 @@ class FatherProduct extends Model
 {
     public $timestamps = false;
     protected $table = 'father_products';
-
+    protected $guarded = [];
+    
     //categories ||--{ father_products
     public function category(): BelongsTo
     {

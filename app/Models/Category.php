@@ -10,7 +10,8 @@ class Category extends Model
 {
     public $timestamps = false;
     protected $table = 'categories';
-
+    protected $guarded = [];
+    
     //categories ||--{ categories
     public function parentCategory(): BelongsTo
     {

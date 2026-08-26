@@ -39,8 +39,14 @@ class ConfirmOrderRequest extends FormRequest
                     );
 
                 }
+
+                if ($line['quantity'] % $product->pack !== 0) {
+                    $validator->errors()->add(
+                        "order_lines.{$index}.quantity",
+                        "The quantity for product {$line['id']} must be a multiple of $product->pack."
+                    );
+                }
             }
         });
     }
-
 }

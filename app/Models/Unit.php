@@ -9,6 +9,7 @@ class Unit extends Model
 {
     public $timestamps = false;
     protected $table = 'units';
+    protected $guarded = [];
 
     //units ||--{ child_products
     public function childProducts(): HasMany

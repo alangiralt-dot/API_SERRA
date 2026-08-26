@@ -9,6 +9,7 @@ class Status extends Model
 {
     public $timestamps = false;
     protected $table = 'statuses';
+    protected $guarded = [];
 
     // statuses ||--{ orders
     public function orders(): HasMany
