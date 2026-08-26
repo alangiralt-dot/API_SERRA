@@ -10,7 +10,7 @@ use Carbon\Carbon;
 class Order extends Model
 {
     public $timestamps = false;
-    protected $fillable = ['customer_id', 'code', 'status_id', 'date'];
+    protected $fillable = ['customer_id', 'code', 'status_id', 'date', 'order_availability', 'total_amount'];
 
     protected static function booted(): void
     {

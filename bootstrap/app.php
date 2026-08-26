@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\CheckIfAdmin;
+use App\Http\Middleware\CheckIfCustomer;
 use Illuminate\Validation\ValidationException;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -16,7 +17,8 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         // Fase 3: Registrem l'alias curt per poder utilitzar-lo a routes/api.php
         $middleware->alias([
-            'admin' => CheckIfAdmin::class,
+            'admin'    => CheckIfAdmin::class,
+            'customer' => CheckIfCustomer::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -15,3 +15,7 @@ Route::post('/customers', [ProfileController::class, 'store']);
 Route::middleware('auth:api')->group(function () {
     Route::put('/customers/tokens', [AuthController::class, 'logout']);
 });
+
+Route::middleware(['auth:api', 'customer'])->group(function () {
+    Route::post('/orders', [OrderController::class, 'confirmOrder']);
+});

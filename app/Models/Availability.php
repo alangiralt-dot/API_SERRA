@@ -9,6 +9,7 @@ class Availability extends Model
 {
     public $timestamps = false;
     protected $table = 'availabilities';
+    protected $guarded = [];
 
     //availabilities ||--{ child_products
     public function childProducts(): HasMany
