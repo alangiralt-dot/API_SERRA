@@ -146,4 +146,57 @@ class OrderConfirmationTest extends TestCase
         $this->assertEquals(56, \App\Models\ChildProduct::find(132)->stock);
         $this->assertEquals(51, \App\Models\ChildProduct::find(149)->stock);
     }
+    
+    public function test_customer_cannot_confirm_order_if_stock_is_insufficient(): void
+    {
+        $this->setUpCatalog();
+
+        $user = \App\Models\User::where('email', 'info@fusteriasaubi.com')->first();
+
+        $payload = [
+            'order_lines' => [
+                ['id' => 6, 'quantity' => 75]
+            ]
+        ];
+
+        $response = $this->actingAs($user, 'api')
+                         ->postJson('/api/orders', $payload);
+
+        $response->assertStatus(422);
+        $response->assertJson([
+            'message' => 'The stock for product 6 is 60.'
+        ]);
+
+        $this->assertDatabaseEmpty('orders');
+        $this->assertDatabaseEmpty('child_product_order');
+
+        $this->assertEquals(60, \App\Models\ChildProduct::find(6)->stock);
+    }
+
+    public function test_an_administrator_cannot_place_orders_and_receives_forbidden(): void
+    {
+        $this->setUpCatalog();
+
+        $user = \App\Models\User::where('email', 'info@fusteriasaubi.com')->first();
+        $user->is_admin = true;
+        $user->save();
+
+        $payload = [
+            'order_lines' => [
+                ['id' => 6, 'quantity' => 60]
+            ]
+        ];
+
+        $response = $this->actingAs($user, 'api')
+                         ->postJson('/api/orders', $payload);
+
+        $response->assertStatus(403);
+        
+        $response->assertJson([
+            'error'   => 'Forbidden',
+            'message' => 'An administrator cannot place orders in the system.'
+        ]);
+
+        $this->assertDatabaseEmpty('orders');
+    }
 }
