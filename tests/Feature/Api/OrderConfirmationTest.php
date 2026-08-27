@@ -165,6 +165,7 @@ class OrderConfirmationTest extends TestCase
 
         $response->assertStatus(422);
         $response->assertJson([
+            'status'   => 'error',
             'message' => 'The stock for product 6 is 60.'
         ]);
 
@@ -194,7 +195,7 @@ class OrderConfirmationTest extends TestCase
         $response->assertStatus(403);
         
         $response->assertJson([
-            'error'   => 'Forbidden',
+            'status'   => 'error',
             'message' => 'An administrator cannot place orders in the system.'
         ]);
 
