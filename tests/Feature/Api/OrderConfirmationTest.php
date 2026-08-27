@@ -13,12 +13,13 @@ class OrderConfirmationTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $seed = true;
-
     public $mockConsoleOutput = false;
 
     private function setUpCatalog(): void
     {
+        $this->setUpPassportPersonalClient();
+        $this->createTestUser();
+        
         $category = \App\Models\Category::create([
             'id' => 1,
             'category' => 'Fusta',
@@ -101,8 +102,8 @@ class OrderConfirmationTest extends TestCase
             ]
         ];
         
-        $response = $this->actingAs($user, 'api') // Simula el Passport Bearer Token [Role: Customer]
-                         ->postJson('/api/orders', $payload);
+        \Laravel\Passport\Passport::actingAs($user);
+        $response = $this->postJson('/api/orders', $payload);
 
         $response->assertStatus(200);
         $response->assertJson([
@@ -159,8 +160,8 @@ class OrderConfirmationTest extends TestCase
             ]
         ];
 
-        $response = $this->actingAs($user, 'api')
-                         ->postJson('/api/orders', $payload);
+        \Laravel\Passport\Passport::actingAs($user);
+        $response = $this->postJson('/api/orders', $payload);
 
         $response->assertStatus(422);
         $response->assertJson([
@@ -187,8 +188,8 @@ class OrderConfirmationTest extends TestCase
             ]
         ];
 
-        $response = $this->actingAs($user, 'api')
-                         ->postJson('/api/orders', $payload);
+        \Laravel\Passport\Passport::actingAs($user);
+        $response = $this->postJson('/api/orders', $payload);
 
         $response->assertStatus(403);
         

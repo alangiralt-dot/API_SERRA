@@ -9,18 +9,12 @@ class RegisterCustomerTest extends TestCase
 {
     use RefreshDatabase;
 
-    // Force Laravel to run the DatabaseSeeder automatically
-    protected $seed = true;
-
-    /**
-    * DISABLE CONSOLE MOCK (Passport structural fix)
-    * This allows the seeder's 'passport:keys' command to write the real
-    * key files to the test disk without throwing the Mockery exception.
-    */
     public $mockConsoleOutput = false;
     
     public function test_customer_can_register_and_receives_token(): void
     {
+        $this->setUpPassportPersonalClient();
+        
         $payload = [
             'first_name'     => 'Pere',
             'last_name'      => 'Mas',
