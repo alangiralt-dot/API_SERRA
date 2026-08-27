@@ -24,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (ValidationException $e) {
             return response()->json([
+                'status' => 'error',
                 'message' => $e->validator->errors()->first()
             ], 422);
         });
