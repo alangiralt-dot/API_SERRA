@@ -19,8 +19,10 @@ class CatalogueController extends Controller
         $category = Category::findOrFail($id);
 
         $productsRaw = ChildProduct::with(['fatherProduct', 'availability', 'unit'])
+            ->where('is_discontinued', false) 
             ->whereHas('fatherProduct', function ($query) use ($id) {
-                $query->where('category_id', $id);
+                $query->where('category_id', $id)
+                      ->where('is_discontinued', false);
             })
             ->get();
 

@@ -32,6 +32,14 @@ class ConfirmOrderRequest extends FormRequest
             foreach ($orderLines as $index => $line) {
                 $product = $products[$line['id']];
 
+                if ($product->is_discontinued) {
+                    $validator->errors()->add(
+                        "order_lines.{$index}.id",
+                        "The product {$line['id']} is discontinued and cannot be ordered."
+                    );
+                    continue; 
+                }
+                
                 if ($line['quantity'] > $product->stock) {
                     $validator->errors()->add(
                         "order_lines.{$index}.quantity",
