@@ -17,6 +17,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->text('details')->nullable();
             $table->string('image_path');
+            $table->boolean('is_discontinued')->default(false);
             $table->foreignId('category_id')->constrained('categories');
         });
     }
