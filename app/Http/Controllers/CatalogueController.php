@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\ChildProduct;
+use App\Models\Unit;
+use App\Models\Availability;
 use App\Http\Requests\GetCategoryProductsRequest;
 use Illuminate\Http\JsonResponse;
 
@@ -36,5 +38,15 @@ class CatalogueController extends Controller
             'category' => $category,
             'products' => $groupedProducts
         ], 200);
+    }
+
+    public function getUnits(): JsonResponse
+    {
+        return response()->json(Unit::all(), 200);
+    }
+
+    public function getAvailabilities(): JsonResponse
+    {
+        return response()->json(Availability::all(), 200);
     }
 }
