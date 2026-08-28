@@ -9,7 +9,7 @@ use App\Models\User;
 use Laravel\Passport\Passport;
 use Tests\TestCase;
 
-class DestroyChildProductTest extends TestCase
+class DiscontinueProductTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -56,5 +56,28 @@ class DestroyChildProductTest extends TestCase
         ]);
 
         $this->assertEquals(0, ChildProduct::find(6)->is_discontinued);
+    }
+
+    public function test_administrator_can_discontinue_father_product_and_all_its_child_variants(): void
+    {
+        $this->setUpPassportPersonalClient();
+        $this->setUpCatalog();
+
+        $admin = $this->createTestUser('admin@fusteriasaubi.com', true);
+        Passport::actingAs($admin);
+
+        $response = $this->deleteJson('/api/products/fathers/1');
+
+        $response->assertStatus(200);
+        $response->assertJson([
+            'status'  => 'success',
+            'message' => 'Father product and all its child variants successfully discontinued.'
+        ]);
+
+        $this->assertEquals(1, \App\Models\FatherProduct::find(1)->is_discontinued);
+
+        $this->assertEquals(1, ChildProduct::find(6)->is_discontinued);
+        $this->assertEquals(1, ChildProduct::find(132)->is_discontinued);
+        $this->assertEquals(1, ChildProduct::find(149)->is_discontinued);
     }
 }

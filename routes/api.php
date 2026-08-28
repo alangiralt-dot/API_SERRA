@@ -22,6 +22,6 @@ Route::middleware(['auth:api', 'customer'])->group(function () {
 });
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
-    Route::delete('/products/fathers/{id}', [ProductController::class, 'destroyFather']);
-    Route::delete('/products/children/{id}', [ProductController::class, 'destroyChild']);
+    Route::delete('/products/fathers/{id}', [ProductController::class, 'discontinueFatherProduct']);
+    Route::delete('/products/children/{id}', [ProductController::class, 'discontinueChildProduct']);
 });
