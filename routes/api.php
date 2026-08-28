@@ -5,6 +5,7 @@ use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/menu', [CatalogueController::class, 'getMenu']);
 Route::get('/categories/{id}/products', [CatalogueController::class, 'showChildProducts']);
@@ -18,4 +19,9 @@ Route::middleware('auth:api')->group(function () {
 
 Route::middleware(['auth:api', 'customer'])->group(function () {
     Route::post('/orders', [OrderController::class, 'confirmOrder']);
+});
+
+Route::middleware(['auth:api', 'admin'])->group(function () {
+    Route::delete('/products/fathers/{id}', [ProductController::class, 'discontinueFatherProduct']);
+    Route::delete('/products/children/{id}', [ProductController::class, 'discontinueChildProduct']);
 });

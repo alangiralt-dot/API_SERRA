@@ -12,13 +12,13 @@ class LogoutCustomerTest extends TestCase
 {
     use RefreshDatabase;
 
-    protected $seed = true;
-
     public $mockConsoleOutput = false;
 
     public function test_customer_can_logout_and_purges_only_their_own_tokens(): void
     {
-        $user1 = User::find(1);
+        $this->setUpPassportPersonalClient();
+        
+        $user1 = $this->createTestUser('info@fusteriasaubi.com', false);
 
         $province = new \App\Models\Province();
         $province->province = 'Tarragona';

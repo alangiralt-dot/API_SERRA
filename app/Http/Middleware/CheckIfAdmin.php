@@ -12,7 +12,7 @@ class CheckIfAdmin
     {
         if (! $request->user() || ! $request->user()->is_admin) {
             return response()->json([
-                'error' => 'Forbidden',
+                'status' => 'error',
                 'message' => 'You do not have administrator privileges to access this path.'
             ], 403);
         }

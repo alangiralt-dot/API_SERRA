@@ -12,7 +12,7 @@ class CheckIfCustomer
     {
         if ($request->user() && $request->user()->is_admin) {
             return response()->json([
-                'error'   => 'Forbidden',
+                'status'   => 'error',
                 'message' => 'An administrator cannot place orders in the system.'
             ], 403);
         }

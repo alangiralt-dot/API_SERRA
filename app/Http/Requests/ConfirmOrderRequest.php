@@ -29,23 +29,28 @@ class ConfirmOrderRequest extends FormRequest
             $productIds = collect($orderLines)->pluck('id')->all();
             $products = ChildProduct::whereIn('id', $productIds)->get()->keyBy('id');
 
+            $errorsAccumulated = [];
+
             foreach ($orderLines as $index => $line) {
                 $product = $products[$line['id']];
 
+                if ($product->is_discontinued) {
+                    $errorsAccumulated[] = "The product {$line['id']} is discontinued and cannot be ordered.";
+                    continue; 
+                }
+                
                 if ($line['quantity'] > $product->stock) {
-                    $validator->errors()->add(
-                        "order_lines.{$index}.quantity",
-                        "The stock for product {$line['id']} is $product->stock."
-                    );
-
+                    $errorsAccumulated[] = "The stock for product {$line['id']} is $product->stock.";
                 }
 
                 if ($line['quantity'] % $product->pack !== 0) {
-                    $validator->errors()->add(
-                        "order_lines.{$index}.quantity",
-                        "The quantity for product {$line['id']} must be a multiple of $product->pack."
-                    );
+                    $errorsAccumulated[] = "The quantity for product {$line['id']} must be a multiple of $product->pack.";
                 }
+            }
+            
+            if (!empty($errorsAccumulated)) {
+                $concatenatedText = implode(' ', $errorsAccumulated);
+                $validator->errors()->add('order_error', $concatenatedText);
             }
         });
     }

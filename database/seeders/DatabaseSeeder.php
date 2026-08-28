@@ -9,12 +9,10 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
         $province = Province::create([
@@ -48,11 +46,14 @@ class DatabaseSeeder extends Seeder
             'updated_at'  => now(),
         ]);
         
-        Artisan::call('passport:keys', ['--force' => true]);
-        Artisan::call('passport:client', [
-            '--personal' => true,
-            '--name' => 'API_SERRA_Personal_Client',
-            '--no-interaction' => true
-        ]);
+        if (DB::table('oauth_clients')->count() === 0) {
+            Artisan::call('passport:keys', ['--force' => true]);
+
+            Artisan::call('passport:client', [
+                '--personal' => true,
+                '--name'     => 'API_SERRA Personal Access Client',
+                '--provider' => 'users',
+            ]);
+        }
     }
 }

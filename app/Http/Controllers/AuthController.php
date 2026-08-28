@@ -12,7 +12,7 @@ class AuthController extends Controller
     {
         $credentials = $request->validated();
         
-        if (Auth::attempt($credentials)) {
+        if (Auth::guard('web')->attempt($credentials)) {
             $user = Auth::user();
 
             $user->tokens()->update(['revoked' => true]);
