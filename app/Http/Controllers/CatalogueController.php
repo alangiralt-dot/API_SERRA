@@ -10,6 +10,8 @@ use App\Models\Availability;
 use App\Http\Requests\DiscontinueProductRequest;
 use App\Http\Requests\GetCategoryProductsRequest;
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateFatherProductRequest;
+use App\Http\Requests\UpdateChildProductRequest;
 use Illuminate\Http\JsonResponse;
 
 class CatalogueController extends Controller
@@ -139,5 +141,49 @@ class CatalogueController extends Controller
             'status'            => 'success',
             'father_product_id' => $fatherId
         ], 201);
+    }
+
+    public function updateFatherProduct(UpdateFatherProductRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $father = FatherProduct::find($validated['id']);
+
+        \Illuminate\Support\Facades\DB::transaction(function () use ($validated, $father) {
+            
+            $father->update($validated);
+
+            if (isset($validated['is_discontinued'])) {
+                if ($validated['is_discontinued'] == 1) {
+                    ChildProduct::where('father_product_id', $father->id)->update([
+                        'is_discontinued' => 1
+                    ]);
+                }
+            }
+        });
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Parent product updated successfully.'
+        ], 200);
+    }
+    
+    public function updateChildProduct(UpdateChildProductRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+        $child = ChildProduct::find($validated['id']);
+
+        \Illuminate\Support\Facades\DB::transaction(function () use (&$validated, $child) {
+            if (!($validated['is_discontinued'] ?? true) && $child->fatherProduct->is_discontinued) {
+                $validated['is_discontinued'] = 1;
+            }
+
+            $child->update($validated);
+        });
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Child product updated successfully.'
+        ], 200);
     }
 }
