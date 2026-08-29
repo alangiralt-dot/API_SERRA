@@ -9,6 +9,7 @@ use App\Models\Unit;
 use App\Models\Availability;
 use App\Http\Requests\DiscontinueProductRequest;
 use App\Http\Requests\GetCategoryProductsRequest;
+use App\Http\Requests\StoreProductRequest;
 use Illuminate\Http\JsonResponse;
 
 class CatalogueController extends Controller
@@ -92,5 +93,51 @@ class CatalogueController extends Controller
     public function getAvailabilities(): JsonResponse
     {
         return response()->json(Availability::all(), 200);
+    }
+
+    public function store(StoreProductRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $fatherId = \Illuminate\Support\Facades\DB::transaction(function () use ($validated) {
+            
+            if (!empty($validated['father_product_id'])) {
+                $fatherId = $validated['father_product_id'];
+            } else {
+                $father = FatherProduct::create([
+                    'name'           => $validated['name'],
+                    'description'    => $validated['description'] ?? null,
+                    'details'        => $validated['details'] ?? null,
+                    'image_path'     => $validated['image_path'],
+                    'is_discontinued' => 1,
+                    'category_id'    => $validated['category_id'],
+                ]);
+                $fatherId = $father->id;
+            }
+
+            foreach ($validated['child_products'] as $childData) {
+                ChildProduct::create([
+                    'reference'          => $childData['reference'],
+                    'width'              => $childData['width'],
+                    'height'             => $childData['height'],
+                    'length'             => $childData['length'],
+                    'cost_unit_price'    => $childData['cost_unit_price'],
+                    'current_unit_price' => $childData['current_unit_price'],
+                    'pack'               => $childData['pack'],
+                    'stock'              => $childData['stock'],
+                    'is_discontinued'    => 1,
+                    'father_product_id'  => $fatherId,
+                    'availability_id'    => $childData['availability_id'],
+                    'unit_id'            => $childData['unit_id'],
+                ]);
+            }
+
+            return $fatherId;
+        });
+
+        return response()->json([
+            'status'            => 'success',
+            'father_product_id' => $fatherId
+        ], 201);
     }
 }
