@@ -22,13 +22,6 @@ class CatalogueController extends Controller
 
         $product = ChildProduct::with('fatherProduct')->find($validated['id']);
 
-        if ($product->fatherProduct->is_discontinued) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Cannot discontinue a child variant if its father product is already discontinued.'
-            ], 422);
-        }
-
         $product->is_discontinued = true;
         $product->save();
 

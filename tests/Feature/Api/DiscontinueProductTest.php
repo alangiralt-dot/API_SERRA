@@ -36,7 +36,7 @@ class DiscontinueProductTest extends TestCase
         $this->assertEquals(0, FatherProduct::find(1)->is_discontinued);
     }
     
-    public function test_cannot_discontinue_child_product_if_its_father_product_is_already_discontinued(): void
+    public function test_can_discontinue_child_product_even_if_its_father_product_is_already_discontinued(): void
     {
         $this->setUpPassportPersonalClient();
         $this->setUpCatalog();
@@ -44,18 +44,22 @@ class DiscontinueProductTest extends TestCase
         $father = \App\Models\FatherProduct::find(1);
         $father->update(['is_discontinued' => true]);
 
+        $childId = 6;
+        \App\Models\ChildProduct::where('id', $childId)->update(['is_discontinued' => false]);
+
         $admin = $this->createTestUser('admin@fusteriasaubi.com', true);
         Passport::actingAs($admin);
 
-        $response = $this->deleteJson('/api/products/children/6');
+        $response = $this->deleteJson("/api/products/children/{$childId}");
 
-        $response->assertStatus(422);
+        $response->assertStatus(200);
         $response->assertJson([
-            'status'  => 'error',
-            'message' => 'Cannot discontinue a child variant if its father product is already discontinued.'
+            'status'  => 'success',
+            'message' => 'Product successfully discontinued.'
         ]);
 
-        $this->assertEquals(0, ChildProduct::find(6)->is_discontinued);
+        $this->assertEquals(1, ChildProduct::find($childId)->is_discontinued);
+        $this->assertEquals(1, FatherProduct::find(1)->is_discontinued);
     }
 
     public function test_administrator_can_discontinue_father_product_and_all_its_child_variants(): void
