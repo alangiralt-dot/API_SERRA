@@ -21,6 +21,8 @@ class OrderConfirmationTest extends TestCase
         $this->createTestUser();
         $this->setUpCatalog();
 
+        $statusConfirmada   = Status::create(['id' => 1, 'status' => 'Confirmada']);
+
         $user = \App\Models\User::where('email', 'info@fusteriasaubi.com')->first();
         $payload = [
             'order_lines' => [
@@ -42,7 +44,7 @@ class OrderConfirmationTest extends TestCase
             'id'                 => 1,
             'customer_id'        => 1,
             'code'               => 'SERRA-2026-00001',
-            'status_id'          => 1,
+            'status_id'          => $statusConfirmada->id,
             'order_availability' => 'Consultar',
             'total_amount'       => 2338.60
         ]);

@@ -126,7 +126,5 @@ abstract class TestCase extends BaseTestCase
             'availability_id'    => 3, 
             'unit_id'            => 2
         ]);
-
-        \App\Models\Status::create(['id' => 1, 'status' => 'Confirmada']);
     }
 }
