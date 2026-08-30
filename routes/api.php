@@ -7,12 +7,17 @@ use App\Http\Controllers\CustomerController;
 
 Route::post('/customers/tokens', [CustomerController::class, 'login']);
 Route::post('/customers', [CustomerController::class, 'store']);
+
 Route::get('/menu', [CatalogueController::class, 'getMenu']);
 Route::get('/categories/{id}/products', [CatalogueController::class, 'showChildProducts']);
+Route::get('/units', [CatalogueController::class, 'getUnits']);
+Route::get('/availabilities', [CatalogueController::class, 'getAvailabilities']);
+
 Route::get('/orders/line-subtotal', [OrderController::class, 'calculateLineSubtotal']);
+Route::get('/statuses', [OrderController::class, 'getStatuses']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::put('/customers/tokens', [CustomerController::class, 'logout']);
+    Route::delete('/customers/tokens', [CustomerController::class, 'logout']);
 });
 
 Route::middleware(['auth:api', 'customer'])->group(function () {
@@ -26,6 +31,5 @@ Route::middleware(['auth:api', 'admin'])->group(function () {
     Route::put('/products/children/{id}', [CatalogueController::class, 'updateChildProduct']);
     Route::post('/products', [CatalogueController::class, 'store']);
    
-    Route::get('/units', [CatalogueController::class, 'getUnits']);
-    Route::get('/availabilities', [CatalogueController::class, 'getAvailabilities']);
+    Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus']);
 });
