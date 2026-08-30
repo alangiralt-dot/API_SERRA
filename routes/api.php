@@ -12,7 +12,7 @@ Route::get('/categories/{id}/products', [CatalogueController::class, 'showChildP
 Route::get('/orders/line-subtotal', [OrderController::class, 'calculateLineSubtotal']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::put('/customers/tokens', [CustomerController::class, 'logout']);
+    Route::delete('/customers/tokens', [CustomerController::class, 'logout']);
 });
 
 Route::middleware(['auth:api', 'customer'])->group(function () {

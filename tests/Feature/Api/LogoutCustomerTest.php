@@ -62,7 +62,7 @@ class LogoutCustomerTest extends TestCase
         $this->assertEquals(2, DB::table('oauth_access_tokens')->where('user_id', $user1->id)->count());
         $this->assertEquals(1, DB::table('oauth_access_tokens')->where('user_id', $user2->id)->count());
 
-        $response = $this->json('PUT', '/api/customers/tokens');
+        $response = $this->json('DELETE', '/api/customers/tokens');
 
         $response->assertStatus(200)
                  ->assertJson([
