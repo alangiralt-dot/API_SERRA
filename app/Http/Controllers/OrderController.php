@@ -4,13 +4,35 @@ namespace App\Http\Controllers;
 
 use App\Models\ChildProduct;
 use App\Models\Order;
+use App\Models\Status;
 use App\Http\Requests\CalculateLineSubtotalRequest;
+use App\Http\Requests\UpdateOrderStatusRequest;
 use App\Http\Requests\ConfirmOrderRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+    public function updateStatus(UpdateOrderStatusRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+        $order = Order::find($validated['id']);
+
+        $order->update([
+            'status_id' => $validated['status_id']
+        ]);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Order status successfully updated.'
+        ], 200);
+    }
+
+    public function getStatuses(): JsonResponse
+    {
+        return response()->json(Status::all(), 200);
+    }
+    
     public function calculateLineSubtotal(CalculateLineSubtotalRequest $request): JsonResponse
     {
         $product = ChildProduct::find($request->input('id'));
