@@ -18,6 +18,7 @@ Route::get('/statuses', [OrderController::class, 'getStatuses']);
 
 Route::middleware('auth:api')->group(function () {
     Route::delete('/customers/tokens', [CustomerController::class, 'logout']);
+    Route::get('/orders/{id}', [OrderController::class,'showOrderDetails']);
 });
 
 Route::middleware(['auth:api', 'customer'])->group(function () {

@@ -7,12 +7,50 @@ use App\Models\Order;
 use App\Models\Status;
 use App\Http\Requests\CalculateLineSubtotalRequest;
 use App\Http\Requests\UpdateOrderStatusRequest;
+use App\Http\Requests\ShowOrderDetailsRequest;
 use App\Http\Requests\ConfirmOrderRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+    
+    public function showOrderDetails(ShowOrderDetailsRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $order = Order::with(['status', 'childProducts.fatherProduct'])->find($validated['id']);
+
+        $total = $order->total_amount;
+        $baseImposable = round($total / 1.21, 2);
+        $iva = round($total - $baseImposable, 2);
+
+        $orderLines = $order->childProducts->map(function ($childProduct) {
+            return [
+                'name'            => $childProduct->fatherProduct->name,
+                'reference'       => $childProduct->reference,
+                'width'           => $childProduct->width,
+                'height'          => $childProduct->height,
+                'length'          => $childProduct->length,
+                'quantity'        => $childProduct->pivot->quantity,
+                'sale_unit_price' => $childProduct->pivot->sale_unit_price,
+                'subtotal'        => $childProduct->pivot->subtotal,
+            ];
+        });
+
+        return response()->json([
+            'id'                 => $order->id,
+            'code'               => $order->code,
+            'status'             => $order->status->status,
+            'date'               => date('d/m/Y H:i', strtotime($order->date)),
+            'order_availability' => $order->order_availability,
+            'base_imposable'     => $baseImposable,
+            'iva'                => $iva,
+            'total_amount'       => $total,
+            'order_lines'        => $orderLines
+        ], 200);
+    }
+
     public function updateStatus(UpdateOrderStatusRequest $request): JsonResponse
     {
         $validated = $request->validated();
