@@ -18,26 +18,18 @@ class UpdateOrderStatusTest extends TestCase
     {
         $this->setUpPassportPersonalClient();
 
-        $statusConfirmada   = Status::create(['id' => 1, 'status' => 'Confirmada']);
-        $statusEnPreparacio = Status::create(['id' => 2, 'status' => 'En preparació']);
-
+        $customer = $this->createTestUser('client1@fusteriasaubi.com', false);
         $admin = $this->createTestUser('admin@fusteriasaubi.com', true);
+
+        $this->setUpOrdersWithoutDetails($admin, $admin, $customer);
+
         Passport::actingAs($admin);
 
-        $order = Order::create([
-            'customer_id'        => $admin->customer_id,
-            'code'               => 'SERRA-2026-00001',
-            'status_id'          => $statusConfirmada->id,
-            'date'               => now(),
-            'order_availability' => '24/48h',
-            'total_amount'       => 150.00
-        ]);
-
         $payload = [
-            'status_id' => $statusEnPreparacio->id,
+            'status_id' => 2,
         ];
 
-        $response = $this->patchJson("/api/orders/{$order->id}/status", $payload);
+        $response = $this->patchJson("/api/orders/3/status", $payload);
 
         $response->assertStatus(200);
         $response->assertJson([
@@ -46,8 +38,8 @@ class UpdateOrderStatusTest extends TestCase
         ]);
 
         $this->assertDatabaseHas('orders', [
-            'id'        => $order->id,
-            'status_id' => $statusEnPreparacio->id,
+            'id'        => 3,
+            'status_id' => 2,
         ]);
     }
 }
