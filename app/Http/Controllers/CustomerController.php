@@ -9,6 +9,7 @@ use App\Models\Province;
 use App\Models\City;
 use App\Models\Customer;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -16,6 +17,26 @@ use Illuminate\Support\Facades\Route;
 
 class CustomerController extends Controller
 {
+    public function getProfile(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        
+        $customer = Customer::with(['city.province'])->find($user->customer_id);
+
+        return response()->json([
+            'first_name'     => $customer->first_name,
+            'last_name'      => $customer->last_name,
+            'phone'          => $customer->phone,
+            'street'         => $customer->street,
+            'address_number' => $customer->address_number,
+            'address_floor'  => $customer->address_floor,
+            'door'           => $customer->door,
+            'postal_code'    => $customer->postal_code,
+            'city'           => $customer->city->city,
+            'province'       => $customer->city->province->province,
+        ], 200);
+    }
+
     public function store(SignInRequest $request)
     {
         $validated = $request->validated();
