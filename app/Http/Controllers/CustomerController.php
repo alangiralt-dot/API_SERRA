@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignInRequest;
+use App\Http\Requests\UpdateProfileRequest;
 use App\Models\Province;
 use App\Models\City;
 use App\Models\Customer;
@@ -17,6 +18,39 @@ use Illuminate\Support\Facades\Route;
 
 class CustomerController extends Controller
 {
+    
+    public function updateProfile(UpdateProfileRequest $request): JsonResponse
+    {
+        $user = $request->user();
+        $validated = $request->validated();
+
+        $province = Province::firstOrCreate(['province' => $validated['province']]);
+
+        $city = City::firstOrCreate([
+            'city'        => $validated['city'],
+            'province_id' => $province->id
+        ]);
+
+        $customer = Customer::find($user->customer_id);
+
+        $customer->update([
+            'first_name'     => $validated['first_name'],
+            'last_name'      => $validated['last_name'],
+            'phone'          => $validated['phone'],
+            'street'         => $validated['street'],
+            'address_number' => $validated['address_number'],
+            'address_floor'  => $validated['address_floor'],
+            'door'           => $validated['door'],
+            'postal_code'    => $validated['postal_code'],
+            'city_id'        => $city->id,
+        ]);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Profile successfully updated.'
+        ], 200);
+    }
+
     public function getProfile(Request $request): JsonResponse
     {
         $user = $request->user();
