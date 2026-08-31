@@ -9,11 +9,36 @@ use App\Http\Requests\CalculateLineSubtotalRequest;
 use App\Http\Requests\UpdateOrderStatusRequest;
 use App\Http\Requests\ShowOrderDetailsRequest;
 use App\Http\Requests\ConfirmOrderRequest;
+use App\Http\Requests\ShowOrdersRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+
+    public function showOrders(ShowOrdersRequest $request): JsonResponse
+    {
+        $user = $request->user();
+
+        $query = Order::with('status');
+
+        if (!$user->is_admin) $query->where('customer_id', $user->customer_id);
+
+        $orders = $query->orderBy('date', 'desc')->get();
+
+        $formattedOrders = $orders->map(function ($order) {
+            return [
+                'id'                 => $order->id,
+                'code'               => $order->code,
+                'status'             => $order->status->status,
+                'date'               => date('d/m/Y H:i', strtotime($order->date)),
+                'order_availability' => $order->order_availability,
+                'total_amount'       => (float) $order->total_amount,
+            ];
+        });
+
+        return response()->json($formattedOrders, 200);
+    }
     
     public function showOrderDetails(ShowOrderDetailsRequest $request): JsonResponse
     {
