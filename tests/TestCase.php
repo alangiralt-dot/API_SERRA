@@ -9,6 +9,7 @@ use App\Models\Province;
 use App\Models\City;
 use App\Models\Customer;
 use App\Models\User;
+use App\Models\Order;
 use App\Models\Category;
 use App\Models\FatherProduct;
 use App\Models\ChildProduct;
@@ -29,9 +30,9 @@ abstract class TestCase extends BaseTestCase
 
     protected function createTestUser(string $email = 'info@fusteriasaubi.com', bool $isAdmin = false): User
     {
-        $province = Province::create(['province' => 'Girona']);
+        $province = Province::firstOrCreate(['province' => 'Girona']);
 
-        $city = City::create([
+        $city = City::firstOrCreate([
             'city'        => 'Salt',
             'province_id' => $province->id
         ]);
@@ -61,26 +62,26 @@ abstract class TestCase extends BaseTestCase
 
     protected function setUpCatalog(): void
     {
-        $category = \App\Models\Category::create([
+        $category = Category::create([
             'id' => 1,
             'category' => 'Fusta',
             'father_id' => null
         ]);
 
-        $fatherProduct = \App\Models\FatherProduct::create([
+        $fatherProduct = FatherProduct::create([
             'id'          => 1, 
             'name'        => 'Producte Pare Test', 
             'image_path'  => 'images/test.png',
             'category_id' => $category->id
         ]);
 
-        $availability1 = \App\Models\Availability::create(['id' => 1, 'availability' => '24/48h', 'delay_weight' => 10]);
-        $availability2 = \App\Models\Availability::create(['id' => 2, 'availability' => '3/5 dies', 'delay_weight' => 20]);
-        $availability3 = \App\Models\Availability::create(['id' => 3, 'availability' => 'Consultar', 'delay_weight' => 30]);
+        $availability1 = Availability::create(['id' => 1, 'availability' => '24/48h', 'delay_weight' => 10]);
+        $availability2 = Availability::create(['id' => 2, 'availability' => '3/5 dies', 'delay_weight' => 20]);
+        $availability3 = Availability::create(['id' => 3, 'availability' => 'Consultar', 'delay_weight' => 30]);
 
-        \App\Models\Unit::create(['id' => 1, 'unit' => '€ / tira']);
-        \App\Models\Unit::create(['id' => 2, 'unit' => '€ / metre']);
-        \App\Models\Unit::create(['id' => 3, 'unit' => '€ / m3']);
+        Unit::create(['id' => 1, 'unit' => '€ / tira']);
+        Unit::create(['id' => 2, 'unit' => '€ / metre']);
+        Unit::create(['id' => 3, 'unit' => '€ / m3']);
 
         $product6 = ChildProduct::create([
             'id'                 => 6, 
@@ -126,5 +127,57 @@ abstract class TestCase extends BaseTestCase
             'availability_id'    => 3, 
             'unit_id'            => 2
         ]);
+    }
+    
+    protected function setUpOrdersWithoutDetails(User $user1, User $user2, User $user3): void
+    {
+        Status::create(['id' => 1, 'status' => 'Confirmada']);
+        Status::create(['id' => 2, 'status' => 'En preparació']);
+        Status::create(['id' => 3, 'status' => 'Lliurada']);
+
+        Order::create([
+            'id'                 => 1,
+            'customer_id'        => $user1->customer_id,
+            'code'               => 'SERRA-2026-00001',
+            'status_id'          => 3,
+            'date'               => '2026-06-10 10:30:00',
+            'order_availability' => '24/48h',
+            'total_amount'       => 785.12
+        ]);
+
+        Order::create([
+            'id'                 => 2,
+            'customer_id'        => $user2->customer_id,
+            'code'               => 'SERRA-2026-00002',
+            'status_id'          => 3,
+            'date'               => '2026-06-28 15:45:00',
+            'order_availability' => '3/5 dies',
+            'total_amount'       => 695.70
+        ]);
+
+        Order::create([
+            'id'                 => 3,
+            'customer_id'        => $user3->customer_id,
+            'code'               => 'SERRA-2026-00003',
+            'status_id'          => 1,
+            'date'               => '2026-07-03 11:15:00',
+            'order_availability' => 'Consultar',
+            'total_amount'       => 1395.32
+        ]);
+    }
+
+    protected function setUpOrderDetailsLines(): void
+    {
+        $order1 = Order::find(1);
+        $order1->childProducts()->attach(6, ['quantity' => 30, 'sale_unit_price' => 6.51, 'subtotal' => 195.30]);
+        $order1->childProducts()->attach(132, ['quantity' => 2, 'sale_unit_price' => 1920.00, 'subtotal' => 589.82]);
+
+        $order2 = Order::find(2);
+        $order2->childProducts()->attach(6, ['quantity' => 45, 'sale_unit_price' => 6.51, 'subtotal' => 292.95]);
+        $order2->childProducts()->attach(149, ['quantity' => 10, 'sale_unit_price' => 16.11, 'subtotal' => 402.75]);
+
+        $order3 = Order::find(3);
+        $order3->childProducts()->attach(132, ['quantity' => 2, 'sale_unit_price' => 1920.00, 'subtotal' => 589.82]);
+        $order3->childProducts()->attach(149, ['quantity' => 20, 'sale_unit_price' => 16.11, 'subtotal' => 805.50]);
     }
 }
