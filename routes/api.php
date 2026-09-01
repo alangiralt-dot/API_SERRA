@@ -32,6 +32,8 @@ Route::middleware(['auth:api', 'customer'])->group(function () {
 });
 
 Route::middleware(['auth:api', 'admin'])->group(function () {
+    Route::patch('/customers/{id}/roles', [CustomerController::class, 'updateRole']);
+    
     Route::delete('/products/fathers/{id}', [CatalogueController::class, 'discontinueFatherProduct']);
     Route::delete('/products/children/{id}', [CatalogueController::class, 'discontinueChildProduct']);
     Route::put('/products/fathers/{id}', [CatalogueController::class, 'updateFatherProduct']);
