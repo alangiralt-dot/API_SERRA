@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SignInRequest;
 use App\Http\Requests\UpdateProfileRequest;
+use App\Http\Requests\UpdateRoleRequest;
 use App\Models\Province;
 use App\Models\City;
 use App\Models\Customer;
@@ -19,6 +20,21 @@ use Illuminate\Support\Facades\Route;
 
 class CustomerController extends Controller
 {
+    
+    public function updateRole(UpdateRoleRequest $request): JsonResponse
+    {
+        $validated = $request->validated();
+
+        $userToModify = User::where('customer_id', $validated['id'])->first();
+
+        $userToModify->update(['is_admin' => $validated['is_admin']]);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'User role successfully updated.'
+        ], 200);
+    }
+
     public function destroy(Request $request): JsonResponse
     {
         $user = $request->user();
