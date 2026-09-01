@@ -77,6 +77,7 @@ class CustomerController extends Controller
         $customer = Customer::with(['city.province'])->find($user->customer_id);
 
         return response()->json([
+            'customer_id'    => $customer->id,
             'first_name'     => $customer->first_name,
             'last_name'      => $customer->last_name,
             'phone'          => $customer->phone,

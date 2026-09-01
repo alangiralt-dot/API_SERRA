@@ -25,6 +25,7 @@ class ShowProfileTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertExactJson([
+            'customer_id'    => $user->customer_id,
             'first_name'     => 'Carles',
             'last_name'      => 'Saubí',
             'phone'          => '972230680',
