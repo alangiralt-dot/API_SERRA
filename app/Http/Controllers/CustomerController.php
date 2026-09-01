@@ -10,6 +10,7 @@ use App\Models\Province;
 use App\Models\City;
 use App\Models\Customer;
 use App\Models\User;
+use App\Models\Order;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,24 @@ use Illuminate\Support\Facades\Route;
 
 class CustomerController extends Controller
 {
+    public function destroy(Request $request): JsonResponse
+    {
+        $user = $request->user();
+        $customerId = $user->customer_id;
+
+        $user->tokens()->delete();
+
+        $user->delete();
+
+        $hasOrders = Order::where('customer_id', $customerId)->exists();
+
+        if (!$hasOrders) Customer::destroy($customerId);
+
+        return response()->json([
+            'status'  => 'success',
+            'message' => 'Account and access successfully removed.'
+        ], 200);
+    }
     
     public function updateProfile(UpdateProfileRequest $request): JsonResponse
     {
