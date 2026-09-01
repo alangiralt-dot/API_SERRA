@@ -26,6 +26,8 @@ Route::middleware('auth:api')->group(function () {
 });
 
 Route::middleware(['auth:api', 'customer'])->group(function () {
+    Route::delete('/customers/users', [CustomerController::class, 'destroy']);
+    
     Route::post('/orders', [OrderController::class, 'confirmOrder']);
 });
 
