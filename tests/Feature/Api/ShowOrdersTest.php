@@ -33,6 +33,7 @@ class ShowOrdersTest extends TestCase
         $response->assertExactJson([
             [
                 'id'                 => 3,
+                'customer_id'        => $customer->customer_id,
                 'code'               => 'SERRA-2026-00003',
                 'status'             => 'Confirmada',
                 'date'               => '03/07/2026 11:15',
@@ -41,6 +42,7 @@ class ShowOrdersTest extends TestCase
             ],
             [
                 'id'                 => 2,
+                'customer_id'        => $admin->customer_id,
                 'code'               => 'SERRA-2026-00002',
                 'status'             => 'Lliurada',
                 'date'               => '28/06/2026 15:45',
@@ -49,6 +51,7 @@ class ShowOrdersTest extends TestCase
             ],
             [
                 'id'                 => 1,
+                'customer_id'        => $admin->customer_id,
                 'code'               => 'SERRA-2026-00001',
                 'status'             => 'Lliurada',
                 'date'               => '10/06/2026 10:30',
@@ -79,6 +82,7 @@ class ShowOrdersTest extends TestCase
         $response->assertExactJson([
             [
                 'id'                 => 3,
+                'customer_id'        => $customer->customer_id,
                 'code'               => 'SERRA-2026-00003',
                 'status'             => 'Confirmada',
                 'date'               => '03/07/2026 11:15',
@@ -87,6 +91,7 @@ class ShowOrdersTest extends TestCase
             ],
             [
                 'id'                 => 2,
+                'customer_id'        => $customer->customer_id,
                 'code'               => 'SERRA-2026-00002',
                 'status'             => 'Lliurada',
                 'date'               => '28/06/2026 15:45',

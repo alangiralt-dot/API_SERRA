@@ -29,6 +29,7 @@ class OrderController extends Controller
         $formattedOrders = $orders->map(function ($order) {
             return [
                 'id'                 => $order->id,
+                'customer_id'        => $order->customer_id,
                 'code'               => $order->code,
                 'status'             => $order->status->status,
                 'date'               => date('d/m/Y H:i', strtotime($order->date)),
