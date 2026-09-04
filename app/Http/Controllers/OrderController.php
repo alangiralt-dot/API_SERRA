@@ -10,11 +10,78 @@ use App\Http\Requests\UpdateOrderStatusRequest;
 use App\Http\Requests\ShowOrderDetailsRequest;
 use App\Http\Requests\ConfirmOrderRequest;
 use App\Http\Requests\ShowOrdersRequest;
+use App\Http\Requests\CalculateCartPreviewRequest;
+
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
+
+    public function calculateCartPreview(CalculateCartPreviewRequest $request): JsonResponse
+    {
+        $items = $request->input('items', []);
+
+        if (empty($items)) {
+            return response()->json([
+                'id'                 => null,
+                'code'               => '-',
+                'status'             => 'En curs',
+                'date'               => now()->format('d/m/Y H:i'),
+                'order_availability' => '-',
+                'base_imposable'     => 0.00,
+                'iva'                => 0.00,
+                'total_amount'       => 0.00,
+                'order_lines'        => []
+            ], 200);
+        }
+
+        $productIds = collect($items)->pluck('id')->all();
+        $products = ChildProduct::with(['fatherProduct', 'unit'])
+            ->whereIn('id', $productIds)
+            ->get()
+            ->keyBy('id');
+
+        $orderLines = [];
+        $baseImposable = 0.00;
+
+        foreach ($items as $item) {
+            $productId = $item['id'];
+            $quantity = $item['quantity'];
+
+            $product = $products[$productId];
+
+            $subtotalLine = $this->computeSubtotal($product, $quantity);
+            $baseImposable += $subtotalLine;
+
+            $orderLines[] = [
+                'name'            => $product->fatherProduct->name,
+                'reference'       => $product->reference,
+                'width'           => (int) $product->width,
+                'height'          => (int) $product->height,
+                'length'          => (int) $product->length,
+                'quantity'        => $quantity,
+                'sale_unit_price' => (float) $product->current_unit_price,
+                'subtotal'        => $subtotalLine
+            ];
+        }
+
+        $baseImposable = round($baseImposable, 2);
+        $iva = round($baseImposable * 0.21, 2);
+        $totalAmount = round($baseImposable * 1.21, 2);
+
+        return response()->json([
+            'id'                 => null,
+            'code'               => '-',
+            'status'             => 'En curs',
+            'date'               => now()->format('d/m/Y H:i'),
+            'order_availability' => '-',
+            'base_imposable'     => $baseImposable,
+            'iva'                => $iva,
+            'total_amount'       => $totalAmount,
+            'order_lines'        => $orderLines
+        ], 200);
+    }
 
     public function showOrders(ShowOrdersRequest $request): JsonResponse
     {
