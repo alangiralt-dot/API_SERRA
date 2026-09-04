@@ -8,7 +8,7 @@ class ShowOrdersRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return $this->user() !== null;
+        return true;
     }
 
     public function validationData(): array
@@ -22,7 +22,7 @@ class ShowOrdersRequest extends FormRequest
     {
         if ($this->user()->is_admin) {
             return [
-                'customer_id' => ['sometimes', 'integer', 'min:1'],
+                'customer_id' => ['required', 'integer', 'min:1'],
             ];
         }
 
