@@ -15,6 +15,7 @@ Route::get('/availabilities', [CatalogueController::class, 'getAvailabilities'])
 
 Route::get('/orders/line-subtotal', [OrderController::class, 'calculateLineSubtotal']);
 Route::get('/statuses', [OrderController::class, 'getStatuses']);
+Route::post('/orders/previews', [OrderController::class, 'calculateCartPreview']);
 
 Route::middleware('auth:api')->group(function () {
     Route::delete('/customers/tokens', [CustomerController::class, 'logout']);
