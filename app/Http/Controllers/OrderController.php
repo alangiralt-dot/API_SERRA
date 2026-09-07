@@ -29,9 +29,9 @@ class OrderController extends Controller
                 'status'             => 'En curs',
                 'date'               => now()->format('d/m/Y H:i'),
                 'order_availability' => '-',
-                'base_imposable'     => 0.00,
-                'iva'                => 0.00,
-                'total_amount'       => 0.00,
+                'taxable_basis'      => 0.00,
+                'tax'                => 0.00,
+                'total'              => 0.00,
                 'order_lines'        => []
             ], 200);
         }
@@ -55,14 +55,17 @@ class OrderController extends Controller
             $baseImposable += $subtotalLine;
 
             $orderLines[] = [
-                'name'            => $product->fatherProduct->name,
-                'reference'       => $product->reference,
-                'width'           => (int) $product->width,
-                'height'          => (int) $product->height,
-                'length'          => (int) $product->length,
-                'quantity'        => $quantity,
-                'sale_unit_price' => (float) $product->current_unit_price,
-                'subtotal'        => $subtotalLine
+                'id'            => $product->id,
+                'name'          => $product->fatherProduct->name,
+                'reference'     => $product->reference,
+                'width'         => $product->width,
+                'height'        => $product->height,
+                'length'        => $product->length,
+                'pack'          => $product->pack,
+                'quantity'      => $quantity,
+                'unit_price'    => $product->current_unit_price,
+                'unit'          => $product->unit->unit,
+                'subtotal'      => $subtotalLine
             ];
         }
 
@@ -76,9 +79,9 @@ class OrderController extends Controller
             'status'             => 'En curs',
             'date'               => now()->format('d/m/Y H:i'),
             'order_availability' => '-',
-            'base_imposable'     => $baseImposable,
-            'iva'                => $iva,
-            'total_amount'       => $totalAmount,
+            'taxable_basis'     => $baseImposable,
+            'tax'                => $iva,
+            'total'       => $totalAmount,
             'order_lines'        => $orderLines
         ], 200);
     }
