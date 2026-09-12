@@ -115,7 +115,8 @@ class OrderController extends Controller
     {
         $validated = $request->validated();
 
-        $order = Order::with(['status', 'childProducts.fatherProduct'])->find($validated['id']);
+        //$order = Order::with(['status', 'childProducts.fatherProduct'])->find($validated['id']);
+        $order = Order::with(['status', 'childProducts.fatherProduct', 'childProducts.unit'])->find($validated['id']);
 
         $total = $order->total_amount;
         $baseImposable = round($total / 1.21, 2);
@@ -130,6 +131,7 @@ class OrderController extends Controller
                 'length'          => $childProduct->length,
                 'quantity'        => $childProduct->pivot->quantity,
                 'sale_unit_price' => $childProduct->pivot->sale_unit_price,
+                'unit'            => $childProduct->unit->unit,
                 'subtotal'        => $childProduct->pivot->subtotal,
             ];
         });
