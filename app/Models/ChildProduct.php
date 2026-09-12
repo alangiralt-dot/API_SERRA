@@ -11,6 +11,14 @@ class ChildProduct extends Model
     public $timestamps = false;
     protected $table = 'child_products';
     protected $guarded = [];
+    
+    protected function casts(): array
+    {
+        return [
+            'current_unit_price' => 'float',
+            'cost_unit_price'    => 'float',
+        ];
+    }
 
     //father_products ||--{ child_products
     public function fatherProduct(): BelongsTo
