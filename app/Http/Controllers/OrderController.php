@@ -118,7 +118,7 @@ class OrderController extends Controller
         //$order = Order::with(['status', 'childProducts.fatherProduct'])->find($validated['id']);
         $order = Order::with(['status', 'childProducts.fatherProduct', 'childProducts.unit'])->find($validated['id']);
 
-        $total = $order->total_amount;
+        $total = (float) $order->total_amount;
         $baseImposable = round($total / 1.21, 2);
         $iva = round($total - $baseImposable, 2);
 
@@ -130,9 +130,9 @@ class OrderController extends Controller
                 'height'          => $childProduct->height,
                 'length'          => $childProduct->length,
                 'quantity'        => $childProduct->pivot->quantity,
-                'sale_unit_price' => $childProduct->pivot->sale_unit_price,
+                'sale_unit_price' => (float) $childProduct->pivot->sale_unit_price,
                 'unit'            => $childProduct->unit->unit,
-                'subtotal'        => $childProduct->pivot->subtotal,
+                'subtotal'        => (float) $childProduct->pivot->subtotal,
             ];
         });
 
