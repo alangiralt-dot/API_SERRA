@@ -36,29 +36,36 @@ class CalculateCartPreviewTest extends TestCase
             'id'                 => null,
             'code'               => '-',
             'status'             => 'En curs',
+            'date'               => now()->format('d/m/Y H:i'),
             'order_availability' => '-',
-            'base_imposable'     => 785.12,
-            'iva'                => 164.88,
-            'total_amount'       => 950.00,
+            'taxable_basis'     => 785.12,
+            'tax'                => 164.88,
+            'total'       => 950,
             'order_lines'        => [
                 [
+                    'id'              => 6,
                     'name'            => 'Producte Pare Test',
                     'reference'       => '90164000',
                     'width'           => 35,
                     'height'          => -1,
                     'length'          => 2500,
+                    'pack'            => 15,
                     'quantity'        => 30,
-                    'sale_unit_price' => 6.51,
+                    'unit_price'      => 6.51,
+                    'unit'            => '€ / tira',
                     'subtotal'        => 195.30
                 ],
                 [
+                    'id'              => 132,
                     'name'            => 'Producte Pare Test',
                     'reference'       => '91687027',
                     'width'           => 160,
                     'height'          => 80,
                     'length'          => 12000,
+                    'pack'            => 1,
                     'quantity'        => 2,
-                    'sale_unit_price' => 1920.00,
+                    'unit_price'      => 1920.00,
+                    'unit'            => '€ / m3',
                     'subtotal'        => 589.82
                 ]
             ]
