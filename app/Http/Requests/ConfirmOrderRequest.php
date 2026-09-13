@@ -35,16 +35,19 @@ class ConfirmOrderRequest extends FormRequest
                 $product = $products[$line['id']];
 
                 if ($product->is_discontinued) {
-                    $errorsAccumulated[] = "The product {$line['id']} is discontinued and cannot be ordered.";
+                    //$errorsAccumulated[] = "The product {$line['id']} is discontinued and cannot be ordered.";
+                    $errorsAccumulated[] = "The product {$product->reference} is discontinued and cannot be ordered.";
                     continue; 
                 }
                 
                 if ($line['quantity'] > $product->stock) {
-                    $errorsAccumulated[] = "The stock for product {$line['id']} is $product->stock.";
+                    //$errorsAccumulated[] = "The stock for product {$line['id']} is $product->stock.";
+                    $errorsAccumulated[] = "The stock for product {$product->reference} is $product->stock.";
                 }
 
                 if ($line['quantity'] % $product->pack !== 0) {
-                    $errorsAccumulated[] = "The quantity for product {$line['id']} must be a multiple of $product->pack.";
+                    //$errorsAccumulated[] = "The quantity for product {$line['id']} must be a multiple of $product->pack.";
+                    $errorsAccumulated[] = "The quantity for product {$product->reference} must be a multiple of $product->pack.";
                 }
             }
             
