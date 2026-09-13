@@ -32,8 +32,8 @@ class UpdateProfileTest extends TestCase
             'address_floor'  => '1r',
             'door'           => '1a',
             'postal_code'    => '17190',
-            'city'           => 'Girona',
-            'province'       => 'Girona',
+            'city_name'      => 'Girona',
+            'province_name'  => 'Girona',
         ]);
 
         $response->assertStatus(200);

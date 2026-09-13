@@ -21,9 +21,9 @@ class UpdateProfileRequest extends FormRequest
             'address_number' => ['required', 'string', 'max:255'],
             'address_floor'  => ['nullable', 'string', 'max:255'],
             'door'           => ['nullable', 'string', 'max:255'],
-            'city'           => ['required', 'string', 'max:255'],
+            'city_name'      => ['required', 'string', 'max:255'],
             'postal_code'    => ['required', 'string', 'max:255'],
-            'province'       => ['required', 'string', 'max:255'],
+            'province_name'  => ['required', 'string', 'max:255'],
         ];
     }
 }

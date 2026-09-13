@@ -59,10 +59,10 @@ class CustomerController extends Controller
         $user = $request->user();
         $validated = $request->validated();
 
-        $province = Province::firstOrCreate(['province' => $validated['province']]);
+        $province = Province::firstOrCreate(['province' => $validated['province_name']]);
 
         $city = City::firstOrCreate([
-            'city'        => $validated['city'],
+            'city'        => $validated['city_name'],
             'province_id' => $province->id
         ]);
 
