@@ -98,7 +98,7 @@ class OrderConfirmationTest extends TestCase
         $response->assertStatus(422);
         $response->assertJson([
             'status'   => 'error',
-            'message' => 'The stock for product 6 is 60.'
+            'message' => 'The stock for product 90164000 is 60.'
         ]);
 
         $this->assertDatabaseEmpty('orders');
