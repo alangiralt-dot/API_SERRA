@@ -20,25 +20,25 @@ The system database structure is defined in the entity-relationship model. You c
 *   MySQL / MariaDB
 
 1. Clone the repository and navigate to the project directory:
-   ```bash
+   ```
    git clone https://github.com/alangiralt-dot/API_SERRA.git
    cd API_SERRA
    git checkout develop
    ```
 
 2. Run `composer install` to recover dependencies:
-   ```bash
+   ```
    composer install
    ```
 
 3. Initialize your environment configuration file and generate the application key:
-   ```bash
+   ```
    cp .env.example .env
    php artisan key:generate
    ```
 
 4. Open the `.env` file and modify the database connection parameters to match your local environment:
-   ```ini
+   ```
    DB_CONNECTION=mysql
    DB_HOST=127.0.0.1
    DB_PORT=3306
@@ -48,29 +48,29 @@ The system database structure is defined in the entity-relationship model. You c
    ```
 
 5. Clear the configuration cache to force the auto-registration of package drivers:
-   ```bash
+   ```
    php artisan config:clear
    ```
 
 6. Reset the database layout and populate it with all datasets and bot variables:
-   ```bash
+   ```
    php artisan migrate:fresh --seed
    php artisan db:seed --class=BotDataSeeder
    ```
 
 7. Generate the OAuth2 encryption keys required for authentication tokens without prompts:
-   ```bash
+   ```
    php artisan passport:keys --force
    ```
 
 8. Verify if port 8000 is free before launching the application:
-   ```bash
+   ```
    netstat -ano | grep 8000
    ```
    *(If the terminal returns no text, the port is free and ready to use).*
 
 9. Launch the local development server in the background to expose the API endpoints:
-   ```bash
+   ```
    php artisan serve --port=8000 &
    ```
    *The backend REST API will be active and listening for JSON requests at http://127.0.0.1:8000*
@@ -83,6 +83,8 @@ The system database structure is defined in the entity-relationship model. You c
     *(Note: The Apache module can remain turned off, as HTTP traffic is already managed independently by the Laravel development server on port 8000).*
     
 ## API Endpoints Reference
+
+---
 
 ### RESOURCE 1: Customers (Profile & Authentication Management)
 
@@ -291,6 +293,8 @@ http://localhost:8000/api/customers/users
     "message": "Account and access successfully removed."
 }
 ```
+
+---
 
 ### RESOURCE 2: Catalogue (Products & Inventory Data)
 
@@ -646,6 +650,8 @@ Rule_2: Every item is always born discontinued to avoid invalid combinations of 
     "father_product_id": 42
 }
 ```
+
+---
 
 ### RESOURCE 3: Orders (Checkout, Logistics & Financial Lines)
 
