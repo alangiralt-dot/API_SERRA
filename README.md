@@ -1,4 +1,4 @@
-# API_SERRA - Serradora Backend
+# API_SERRA
 
 This is the central REST API for managing the sawmill core logistics, customer profiles, and order processing workflows.
 
@@ -11,7 +11,8 @@ This is the central REST API for managing the sawmill core logistics, customer p
 ## Database Architecture
 
 The system database structure is defined in the entity-relationship model. You can inspect the full diagram directly in the repository layout:
-*   [Database ER Diagram](./MER_diagram.png)
+
+[Database ER Diagram](./MER_diagram.png)
 
 ## Requirements & Installation
 
@@ -73,7 +74,7 @@ The system database structure is defined in the entity-relationship model. You c
    ```
    php artisan serve --port=8000 &
    ```
-   *The backend REST API will be active and listening for JSON requests at http://127.0.0.1:8000*
+   *The backend REST API will be active and listening for JSON requests at `http://127.0.0.1:8000`*
 
 10. Launch and keep the MySQL/MariaDB database server active:
     *   Open the **XAMPP Control Panel** application on your computer.
