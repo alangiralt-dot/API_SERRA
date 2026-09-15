@@ -88,7 +88,7 @@ The system database structure is defined in the entity-relationship model. You c
 
 ---
 
-**Route::post('/customers', [CustomerController::class, 'store'])**
+#### `Route::post('/customers', [CustomerController::class, 'store'])`
 
 **URL:**
 ```
@@ -127,7 +127,7 @@ http://localhost:8000/api/customers
 ```
 ---
 
-**Route::post('/customers/tokens', [CustomerController::class, 'login'])**
+#### `Route::post('/customers/tokens', [CustomerController::class, 'login'])`
 
 **URL:**
 ```
@@ -157,7 +157,7 @@ http://localhost:8000/api/customers/tokens
 
 ---
 
-**Route::delete('/customers/tokens', [CustomerController::class, 'logout'])**
+#### `Route::delete('/customers/tokens', [CustomerController::class, 'logout'])`
 
 **URL:**
 ```
@@ -178,7 +178,7 @@ http://localhost:8000/api/customers/tokens
 
 ---
 
-**Route::get('/customers/profiles', [CustomerController::class, 'getProfile'])**
+#### `Route::get('/customers/profiles', [CustomerController::class, 'getProfile'])`
 
 **URL:**
 ```
@@ -208,7 +208,7 @@ http://localhost:8000/api/customers/profiles
 
 ---
 
-**Route::put('/customers/profiles', [CustomerController::class, 'updateProfile'])**
+#### `Route::put('/customers/profiles', [CustomerController::class, 'updateProfile'])`
 
 **URL:**
 ```
@@ -245,7 +245,7 @@ http://localhost:8000/api/customers/profiles
 
 ---
 
-**Route::patch('/customers/{id}/roles', [CustomerController::class, 'updateRole'])**
+#### `Route::patch('/customers/{id}/roles', [CustomerController::class, 'updateRole'])`
 
 **URL:**
 ```
@@ -273,7 +273,7 @@ http://localhost:8000/api/customers/1/roles
 
 ---
 
-**Route::delete('/customers/users', [CustomerController::class, 'destroy'])**
+#### `Route::delete('/customers/users', [CustomerController::class, 'destroy'])`
 
 **URL:**
 ```
@@ -296,7 +296,7 @@ http://localhost:8000/api/customers/users
 
 ---
 
-**Route::get('/menu', [CatalogueController::class, 'getMenu'])**
+#### `Route::get('/menu', [CatalogueController::class, 'getMenu'])`
 
 **URL:**
 ```
@@ -324,7 +324,7 @@ http://localhost:8000/api/menu
 
 ---
 
-**Route::get('/categories/{id}/products', [CatalogueController::class, 'showChildProducts'])**
+#### `Route::get('/categories/{id}/products', [CatalogueController::class, 'showChildProducts'])`
 
 **URL:**
 ```
@@ -384,7 +384,7 @@ http://localhost:8000/api/categories/4/products
 
 ---
 
-**Route::get('/units', [CatalogueController::class, 'getUnits'])**
+#### `Route::get('/units', [CatalogueController::class, 'getUnits'])`
 
 **URL:**
 ```
@@ -421,7 +421,7 @@ http://localhost:8000/api/units
 
 ---
 
-**Route::get('/availabilities', [CatalogueController::class, 'getAvailabilities'])**
+#### `Route::get('/availabilities', [CatalogueController::class, 'getAvailabilities'])`
 
 **URL:**
 ```
@@ -453,7 +453,7 @@ http://localhost:8000/api/availabilities
 
 ---
 
-**Route::delete('/products/fathers/{id}', [CatalogueController::class, 'discontinueFatherProduct'])**
+#### `Route::delete('/products/fathers/{id}', [CatalogueController::class, 'discontinueFatherProduct'])`
 
 **URL:**
 ```
@@ -476,7 +476,7 @@ Rule_1: We don't want NOT discontinued children who have a discontinued father.
 
 ---
 
-**Route::delete('/products/children/{id}', [CatalogueController::class, 'discontinueChildProduct'])**
+#### `Route::delete('/products/children/{id}', [CatalogueController::class, 'discontinueChildProduct'])`
 
 **URL:**
 ```
@@ -499,7 +499,7 @@ Rule_1: We don't want NOT discontinued children who have a discontinued father.
 
 ---
 
-**Route::put('/products/fathers/{id}', [CatalogueController::class, 'updateFatherProduct'])**
+#### `Route::put('/products/fathers/{id}', [CatalogueController::class, 'updateFatherProduct'])`
 
 **URL:**
 ```
@@ -534,7 +534,7 @@ Rule_3: If they request is_discontinued=0, we update the parent and do not modif
 
 ---
 
-**Route::put('/products/children/{id}', [CatalogueController::class, 'updateChildProduct'])**
+#### `Route::put('/products/children/{id}', [CatalogueController::class, 'updateChildProduct'])`
 
 **URL:**
 ```
@@ -567,7 +567,7 @@ Rule_2: We do not modify the parent and update the child except when the parent 
 
 ---
 
-**Route::post('/products', [CatalogueController::class, 'store'])**
+#### `Route::post('/products', [CatalogueController::class, 'store'])`
 
 **URL:**
 ```
@@ -651,7 +651,7 @@ Rule_2: Every item is always born discontinued to avoid invalid combinations of 
 
 ---
 
-**Route::post('/orders/previews', [OrderController::class, 'calculateCartPreview'])**
+#### `Route::post('/orders/previews', [OrderController::class, 'calculateCartPreview'])`
 
 **URL:**
 ```
@@ -720,7 +720,7 @@ http://localhost:8000/api/orders/previews
 
 ---
 
-**Route::get('/orders/line-subtotal', [OrderController::class, 'calculateLineSubtotal'])**
+#### `Route::get('/orders/line-subtotal', [OrderController::class, 'calculateLineSubtotal'])`
 
 **URL:**
 ```
@@ -738,7 +738,7 @@ http://localhost:8000/api/orders/line-subtotal?id=6&quantity=60
 
 ---
 
-**Route::get('/orders', [OrderController::class,'showOrders'])**
+#### `Route::get('/orders', [OrderController::class,'showOrders'])`
 
 **URL:**
 ```
@@ -784,7 +784,7 @@ http://localhost:8000/api/orders
 
 ---
 
-**Route::get('/orders/{id}', [OrderController::class,'showOrderDetails'])**
+#### `Route::get('/orders/{id}', [OrderController::class,'showOrderDetails'])`
 
 **URL:**
 ```
@@ -835,7 +835,7 @@ http://localhost:8000/api/orders/3
 
 ---
 
-**Route::post('/orders', [OrderController::class, 'confirmOrder'])**
+#### `Route::post('/orders', [OrderController::class, 'confirmOrder'])`
 
 **URL:**
 ```
@@ -867,7 +867,7 @@ http://localhost:8000/api/orders
 
 ---
 
-**Route::get('/statuses', [OrderController::class, 'getStatuses'])**
+#### `Route::get('/statuses', [OrderController::class, 'getStatuses'])`
 
 **URL:**
 ```
@@ -897,7 +897,7 @@ Feature: feature/order-status-update
 
 ---
 
-**Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus'])**
+#### `Route::patch('/orders/{id}/status', [OrderController::class, 'updateStatus'])`
 
 **URL:**
 ```
@@ -922,4 +922,3 @@ http://localhost:8000/api/orders/2/status
     "message": "Order status successfully updated."
 }
 ```
-
