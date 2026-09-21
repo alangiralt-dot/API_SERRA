@@ -168,7 +168,8 @@ class CustomerController extends Controller
                 'status' => 'success',
                 'data'   => [
                     'access_token' => $tokenResult->accessToken,
-                    'token_type'   => 'Bearer'
+                    'token_type'   => 'Bearer',
+                    'is_admin'     => $user->is_admin ? 'admin' : 'client'
                 ]
             ], 201);
         }

@@ -43,7 +43,8 @@ class RegisterCustomerTest extends TestCase
                  ->assertJson([
                      'status' => 'success',
                      'data' => [
-                         'token_type' => 'Bearer'
+                         'token_type' => 'Bearer',
+                         'is_admin'   => 'client'
                      ]
                  ]);
     }
