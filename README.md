@@ -882,7 +882,6 @@ http://localhost:8000/api/statuses
 ```
 
 **Description:** Returns the contents of the database table statuses.
-Feature: feature/order-status-update
 
 **Response (200 OK):**
 ```
