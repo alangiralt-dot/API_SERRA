@@ -83,6 +83,10 @@ The system database structure is defined in the entity-relationship model. You c
     *   Verify that the module background highlights in green and displays the default port **3306**.
     *(Note: The Apache module can remain turned off, as HTTP traffic is already managed independently by the Laravel development server on port 8000).*
     
+11. To confirm purchases, set the stock for all products to 10:
+   ```
+   UPDATE child_products SET stock = 10;
+   ```
 ## API Endpoints Reference
 
 ---
